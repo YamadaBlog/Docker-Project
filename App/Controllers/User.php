@@ -23,20 +23,35 @@ class User extends \Core\Controller
      */
     public function loginAction()
     {
+        // Vérifiez les cookies
+        if (isset($_COOKIE['user_id']) && isset($_COOKIE['username'])) {
+            // Créez une session pour l'utilisateur à partir des cookies
+            $_SESSION['user'] = array(
+                'id' => $_COOKIE['user_id'],
+                'username' => $_COOKIE['username'],
+            );
+    
+            // Redirigez vers la page du compte
+            header('Location: /account');
+            exit;
+        }
+    
         if(isset($_POST['submit'])){
             $f = $_POST;
-
+    
             // TODO: Validation
-
+    
             // Se connecte
             $this->login($f);
             
             // Si login OK, redirige vers le compte
             header('Location: /account');
+            exit;
         }
-
+    
         View::renderTemplate('User/login.html');
     }
+    
 
     /**
      * Page de création de compte
@@ -115,37 +130,38 @@ class User extends \Core\Controller
     private function login($data){
         try {
             if(!isset($data['email'])){
-                throw new Exception('TODO');
+                throw new Exception('L\'email est requis');
             }
-
-            // Récupère dans la bdd l'adresse correspondante
+    
+            // Récupère dans la bdd l'utilisateur correspondant
             $user = \App\Models\User::getByLogin($data['email']);
-
+    
             if (Hash::generate($data['password'], $user['salt']) !== $user['password']) {
                 return false;
             }
-
-            // TODO: Create a remember me cookie if the user has selected the option
-            // to remained logged in on the login form.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
-
-            // Creér une session de l'utilisateur
+    
+            // Crée une session pour l'utilisateur
             $_SESSION['user'] = array(
                 'id' => $user['id'],
                 'username' => $user['username'],
             );
-
-            // Convertir le tableau PHP en JSON
-            // Phase de test $userJSON = json_encode($_SESSION['user']);
-
+    
+            // Si l'utilisateur a sélectionné "Se souvenir de moi", crée un cookie
+            if (isset($data['remember_me'])) {
+                // Définir les cookies avec une durée de vie d'une semaine
+                setcookie('user_id', $user['id'], time() + (7 * 24 * 60 * 60), "/");
+                setcookie('username', $user['username'], time() + (7 * 24 * 60 * 60), "/");
+            }
+    
             return true;
-
+    
         } catch (Exception $ex) {
-            // TODO : Set flash if error
+            // Gérer les erreurs
             /* Utility\Flash::danger($ex->getMessage());*/
             return false;
         }
     }
+    
 
 
     /**
@@ -156,16 +172,17 @@ class User extends \Core\Controller
      * @since 1.0.2
      */
     public function logoutAction() {
-
-        /*
-        if (isset($_COOKIE[$cookie])){
-            // TODO: Delete the users remember me cookie if one has been stored.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L148
-        }*/
-        // Destroy all data registered to the session.
-
+        // Supprimer les cookies "Se souvenir de moi"
+        if (isset($_COOKIE['user_id'])) {
+            setcookie('user_id', '', time() - 3600, "/");
+        }
+        if (isset($_COOKIE['username'])) {
+            setcookie('username', '', time() - 3600, "/");
+        }
+    
+        // Détruire toutes les données de la session
         $_SESSION = array();
-
+    
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000,
@@ -173,12 +190,11 @@ class User extends \Core\Controller
                 $params["secure"], $params["httponly"]
             );
         }
-
+    
         session_destroy();
-
-        header ("Location: /");
-
-        return true;
+    
+        header("Location: /");
+        exit;
     }
-
+    
 }
