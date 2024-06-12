@@ -50,7 +50,8 @@ class User extends \Core\Controller
                 // TODO: Gestion d'erreur côté utilisateur
             }
 
-            // validation
+            // Connexion après création du user
+            // Correctif déjà mis en place sur première feature 
 
             $userId = $this->register($f);
             if ($userId) {
@@ -58,7 +59,7 @@ class User extends \Core\Controller
                 $this->login($f);
                 // Rediriger vers la page du compte
                 header('Location: /account');
-                exit; // Assurez-vous de sortir du script après la redirection
+                exit;
             }
         }
 
