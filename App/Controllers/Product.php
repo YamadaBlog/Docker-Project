@@ -17,15 +17,35 @@ class Product extends \Core\Controller
      * @return void
      */
     public function indexAction()
-    {
+{
+    if (isset($_POST['submit'])) {
+        try {
+            $f = $_POST;
+            $errors = [];
 
-        if(isset($_POST['submit'])) {
+            // Validation des champs
+            if (empty($f['name'])) {
+                $errors[] = 'Le titre est obligatoire.';
+            }
+            if (empty($f['description'])) {
+                $errors[] = 'La description est obligatoire.';
+            }
+            if (empty($f['ville'])) {
+                $errors[] = 'La ville est obligatoire.';
+            }
+            if (empty($_FILES['picture']['name'])) {
+                $errors[] = 'L\'image est obligatoire.';
+            } elseif (!in_array($_FILES['picture']['type'], ['image/jpeg', 'image/png', 'image/gif'])) {
+                $errors[] = 'Seules les images au format JPG, PNG, et GIF sont autorisées.';
+            }
 
-            try {
-                $f = $_POST;
-
-                // TODO: Validation
-
+            // Si des erreurs sont présentes, les afficher
+            if (!empty($errors)) {
+                foreach ($errors as $error) {
+                    echo "<p>$error</p>";
+                }
+            } else {
+                // Pas d'erreurs, procéder à l'enregistrement de l'article
                 $f['user_id'] = $_SESSION['user']['id'];
                 $id = Articles::save($f);
 
@@ -34,12 +54,14 @@ class Product extends \Core\Controller
                 Articles::attachPicture($id, $pictureName);
 
                 header('Location: /product/' . $id);
-            } catch (\Exception $e){
-                    var_dump($e);
+                exit;
             }
+        } catch (\Exception $e) {
+            var_dump($e);
         }
+    }
 
-        View::renderTemplate('Product/Add.html');
+    View::renderTemplate('Product/Add.html');
     }
 
     /**
