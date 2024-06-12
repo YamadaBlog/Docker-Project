@@ -28,8 +28,10 @@ class User extends \Core\Controller
 
             // TODO: Validation
 
+            // Se connecte
             $this->login($f);
-
+            echo '<script>console.log("Login activer")</script>';
+            
             // Si login OK, redirige vers le compte
             header('Location: /account');
         }
@@ -42,6 +44,7 @@ class User extends \Core\Controller
      */
     public function registerAction()
     {
+        echo '<script>console.log("Your stuff here")</script>';
         if(isset($_POST['submit'])){
             $f = $_POST;
 
@@ -51,8 +54,14 @@ class User extends \Core\Controller
 
             // validation
 
-            $this->register($f);
-            // TODO: Rappeler la fonction de login pour connecter l'utilisateur
+            $userId = $this->register($f);
+            if ($userId) {
+                // Connexion de l'utilisateur nouvellement enregistré
+                $this->login($f);
+                // Rediriger vers la page du compte
+                header('Location: /account');
+                exit; // Assurez-vous de sortir du script après la redirection
+            }
         }
 
         View::renderTemplate('User/register.html');
@@ -63,6 +72,13 @@ class User extends \Core\Controller
      */
     public function accountAction()
     {
+        // Vérifie si l'utilisateur est connecté, sinon redirige vers la page de connexion
+        if (!Session::userLoggedIn()) {
+            header('Location: /login');
+            exit;
+        }
+
+
         $articles = Articles::getByUser($_SESSION['user']['id']);
 
         View::renderTemplate('User/account.html', [
@@ -92,15 +108,18 @@ class User extends \Core\Controller
         } catch (Exception $ex) {
             // TODO : Set flash if error : utiliser la fonction en dessous
             /* Utility\Flash::danger($ex->getMessage());*/
+            return false;
         }
     }
 
+    // Fonction principale de connexion au serveur d'un utilisateur
     private function login($data){
         try {
             if(!isset($data['email'])){
                 throw new Exception('TODO');
             }
 
+            // Récupère dans la bdd l'adresse correspondante
             $user = \App\Models\User::getByLogin($data['email']);
 
             if (Hash::generate($data['password'], $user['salt']) !== $user['password']) {
@@ -111,16 +130,24 @@ class User extends \Core\Controller
             // to remained logged in on the login form.
             // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
 
+            // Creér une session de l'utilisateur
             $_SESSION['user'] = array(
                 'id' => $user['id'],
                 'username' => $user['username'],
             );
+
+            // Convertir le tableau PHP en JSON
+            $userJSON = json_encode($_SESSION['user']);
+
+            // Afficher les données dans la console du navigateur en utilisant JavaScript
+            echo "<script>console.log('Session user:', $userJSON);</script>";
 
             return true;
 
         } catch (Exception $ex) {
             // TODO : Set flash if error
             /* Utility\Flash::danger($ex->getMessage());*/
+            return false;
         }
     }
 
