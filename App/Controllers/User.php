@@ -30,7 +30,6 @@ class User extends \Core\Controller
 
             // Se connecte
             $this->login($f);
-            echo '<script>console.log("Login activer")</script>';
             
             // Si login OK, redirige vers le compte
             header('Location: /account');
@@ -44,7 +43,6 @@ class User extends \Core\Controller
      */
     public function registerAction()
     {
-        echo '<script>console.log("Your stuff here")</script>';
         if(isset($_POST['submit'])){
             $f = $_POST;
 
@@ -137,10 +135,7 @@ class User extends \Core\Controller
             );
 
             // Convertir le tableau PHP en JSON
-            $userJSON = json_encode($_SESSION['user']);
-
-            // Afficher les données dans la console du navigateur en utilisant JavaScript
-            echo "<script>console.log('Session user:', $userJSON);</script>";
+            // Phase de test $userJSON = json_encode($_SESSION['user']);
 
             return true;
 
