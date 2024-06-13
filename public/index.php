@@ -21,6 +21,8 @@ error_reporting(E_ALL);
 set_error_handler('Core\Error::errorHandler');
 set_exception_handler('Core\Error::exceptionHandler');
 
+// Inclure le fichier d'initialisation
+require_once dirname(__DIR__) . '/App/Init.php';
 
 /**
  * Routing
