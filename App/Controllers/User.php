@@ -23,19 +23,6 @@ class User extends \Core\Controller
      */
     public function loginAction()
     {
-        // Vérifiez les cookies
-        if (isset($_COOKIE['user_id']) && isset($_COOKIE['username'])) {
-            // Créez une session pour l'utilisateur à partir des cookies
-            $_SESSION['user'] = array(
-                'id' => $_COOKIE['user_id'],
-                'username' => $_COOKIE['username'],
-            );
-    
-            // Redirigez vers la page du compte
-            header('Location: /account');
-            exit;
-        }
-    
         if(isset($_POST['submit'])){
             $f = $_POST;
     
