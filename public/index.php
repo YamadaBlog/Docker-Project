@@ -38,6 +38,7 @@ $router->add('account', ['controller' => 'User', 'action' => 'account', 'private
 $router->add('product', ['controller' => 'Product', 'action' => 'index', 'private' => true]);
 $router->add('api/product', ['controller' => 'Api', 'action' => 'products']);
 $router->add('product/{id:\d+}', ['controller' => 'Product', 'action' => 'show']);
+$router->add('send-message', ['controller' => 'Product', 'action' => 'sendMessage']);
 $router->add('{controller}/{action}');
 
 /*
