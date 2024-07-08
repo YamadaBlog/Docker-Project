@@ -92,11 +92,13 @@
     });
 
     $(".form-control.cityAutoComplete").on("keydown", () => {
-        $('.bootstrap-autocomplete.dropdown-menu').css("display", "block")
-    })
+        $('.bootstrap-autocomplete.dropdown-menu').css("display", "block");
+    });
 
     $(".form-control.cityAutoComplete").on("blur", () => {
-        $('.bootstrap-autocomplete.dropdown-menu').css("display", "none")
-    })
+        setTimeout(() => {
+            $('.bootstrap-autocomplete.dropdown-menu').css("display", "none");
+        }, 100);
+    });
 </script>
 {% endblock %}
