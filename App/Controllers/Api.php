@@ -20,7 +20,13 @@ class Api extends \Core\Controller
      */
     public function ProductsAction()
     {
+        // Vérifier si $_GET['sort'] est définie
+        if(isset($_GET['sort'])) {
         $query = $_GET['sort'];
+        } else {
+        // Si $_GET['sort'] n'est pas définie, vous pouvez définir une valeur par défaut ou gérer ce cas selon vos besoins
+        $query = ''; // Par exemple, vous pouvez définir une requête vide
+        }
 
         $articles = Articles::getAll($query);
 

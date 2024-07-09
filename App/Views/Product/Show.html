@@ -1,28 +1,22 @@
 {% extends "base.html" %}
-
 {% block title %}Produit{% endblock %}
 
 {% block body %}
-
 <div class="content-wrapper single-article mt-40">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-xs-12 col-sm-12">
+                <!-- Contenu de l'article -->
                 <div class="preview-article">
-                    <img
-                            src="{{ ('/storage/' ~ article.picture) }}"/>
-
+                    <img src="{{ ('/storage/' ~ article.picture) }}" alt="{{ article.name }}"/>
                 </div>
-                <h1><a href="#">{{article.name}}</a></h1>
-
-
+                <h1><a href="#">{{ article.name }}</a></h1>
                 <div class="author">
                     <div class="author-head">
                         <div class="sv-name">
                             <div><a href="#">{{ article.username }}</a></div>
                         </div>
                     </div>
-
                     <div class="author-border"></div>
                     <div class="sv-views">
                         <div class="sv-views-count">
@@ -34,17 +28,44 @@
                 <div class="info">
                     <div class="info-content">
                         <h4>Description:</h4>
-                        <p>{{article.description}}</p>
+                        <p>{{ article.description }}</p>
                     </div>
                     <div class="u-area mt-small">
-
-                    <a name="submit" href="mailto:{{article.email}}" class="btn btn-primary u-btn">Contacter {{article
-                        .username}}</a>
-
+                        <!-- Bouton pour ouvrir la modal -->
+                        <button type="button" class="btn btn-primary u-btn" data-toggle="modal" data-target="#contactModal">Contacter {{ article.username }}</button>
+                        <!-- Message de succès -->
+                        <div id="contactSuccess" class="alert alert-success mt-3" style="display: none;">
+                            Votre message a été envoyé avec succès !
+                        </div>
+                        <!-- Formulaire de contact -->
+                        <div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="contactModalLabel">Contacter {{ article.username }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="contactForm">
+                                            <div class="form-group">
+                                                <label for="contactEmail">Votre adresse e-mail</label>
+                                                <input type="email" class="form-control" id="contactEmail" name="email" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="contactMessage">Message</label>
+                                                <textarea class="form-control" id="contactMessage" name="message" rows="3" required></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Envoyer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
             <!-- right column -->
             <div class="col-lg-4 col-xs-12 col-sm-12 hidden-xs">
                 <p>Vous aimerez peut-être...</p>
@@ -53,13 +74,11 @@
                         {% for suggestion in suggestions %}
                         <div class="col-lg-12 col-sm-12">
                             <div class="v-desc">
-                                <a href="{{ ('/product/' ~ suggestion.id) }}">{{suggestion.name}}</a>
+                                <a href="{{ ('/product/' ~ suggestion.id) }}">{{ suggestion.name }}</a>
                             </div>
-
                             <div class="v-views">
-                                {{ suggestion.views}} vues
+                                {{ suggestion.views }} vues
                             </div>
-
                             <hr>
                         </div>
                         {% endfor %}
@@ -71,4 +90,4 @@
     </div>
 </div>
 
-{% endblock body %}
+{% endblock %}

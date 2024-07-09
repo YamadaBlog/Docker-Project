@@ -21,6 +21,8 @@ error_reporting(E_ALL);
 set_error_handler('Core\Error::errorHandler');
 set_exception_handler('Core\Error::exceptionHandler');
 
+// Inclure le fichier d'initialisation
+require_once dirname(__DIR__) . '/App/Init.php';
 
 /**
  * Routing
@@ -34,7 +36,9 @@ $router->add('register', ['controller' => 'User', 'action' => 'register']);
 $router->add('logout', ['controller' => 'User', 'action' => 'logout', 'private' => true]);
 $router->add('account', ['controller' => 'User', 'action' => 'account', 'private' => true]);
 $router->add('product', ['controller' => 'Product', 'action' => 'index', 'private' => true]);
+$router->add('api/product', ['controller' => 'Api', 'action' => 'products']);
 $router->add('product/{id:\d+}', ['controller' => 'Product', 'action' => 'show']);
+$router->add('send-message', ['controller' => 'Product', 'action' => 'sendMessage']);
 $router->add('{controller}/{action}');
 
 /*

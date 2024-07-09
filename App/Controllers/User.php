@@ -25,17 +25,20 @@ class User extends \Core\Controller
     {
         if(isset($_POST['submit'])){
             $f = $_POST;
-
+    
             // TODO: Validation
-
+    
+            // Se connecte
             $this->login($f);
-
+            
             // Si login OK, redirige vers le compte
             header('Location: /account');
+            exit;
         }
-
+    
         View::renderTemplate('User/login.html');
     }
+    
 
     /**
      * Page de création de compte
@@ -49,10 +52,17 @@ class User extends \Core\Controller
                 // TODO: Gestion d'erreur côté utilisateur
             }
 
-            // validation
+            // Connexion après création du user
+            // Correctif déjà mis en place sur première feature 
 
-            $this->register($f);
-            // TODO: Rappeler la fonction de login pour connecter l'utilisateur
+            $userId = $this->register($f);
+            if ($userId) {
+                // Connexion de l'utilisateur nouvellement enregistré
+                $this->login($f);
+                // Rediriger vers la page du compte
+                header('Location: /account');
+                exit;
+            }
         }
 
         View::renderTemplate('User/register.html');
@@ -63,6 +73,13 @@ class User extends \Core\Controller
      */
     public function accountAction()
     {
+        // Vérifie si l'utilisateur est connecté, sinon redirige vers la page de connexion
+        if (!Session::userLoggedIn()) {
+            header('Location: /login');
+            exit;
+        }
+
+
         $articles = Articles::getByUser($_SESSION['user']['id']);
 
         View::renderTemplate('User/account.html', [
@@ -92,37 +109,46 @@ class User extends \Core\Controller
         } catch (Exception $ex) {
             // TODO : Set flash if error : utiliser la fonction en dessous
             /* Utility\Flash::danger($ex->getMessage());*/
+            return false;
         }
     }
 
+    // Fonction principale de connexion au serveur d'un utilisateur
     private function login($data){
         try {
             if(!isset($data['email'])){
-                throw new Exception('TODO');
+                throw new Exception('L\'email est requis');
             }
-
+    
+            // Récupère dans la bdd l'utilisateur correspondant
             $user = \App\Models\User::getByLogin($data['email']);
-
+    
             if (Hash::generate($data['password'], $user['salt']) !== $user['password']) {
                 return false;
             }
-
-            // TODO: Create a remember me cookie if the user has selected the option
-            // to remained logged in on the login form.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
-
+    
+            // Crée une session pour l'utilisateur
             $_SESSION['user'] = array(
                 'id' => $user['id'],
                 'username' => $user['username'],
             );
-
+    
+            // Si l'utilisateur a sélectionné "Se souvenir de moi", crée un cookie
+            if (isset($data['remember_me'])) {
+                // Définir les cookies avec une durée de vie d'une semaine
+                setcookie('user_id', $user['id'], time() + (7 * 24 * 60 * 60), "/");
+                setcookie('username', $user['username'], time() + (7 * 24 * 60 * 60), "/");
+            }
+    
             return true;
-
+    
         } catch (Exception $ex) {
-            // TODO : Set flash if error
+            // Gérer les erreurs
             /* Utility\Flash::danger($ex->getMessage());*/
+            return false;
         }
     }
+    
 
 
     /**
@@ -133,16 +159,17 @@ class User extends \Core\Controller
      * @since 1.0.2
      */
     public function logoutAction() {
-
-        /*
-        if (isset($_COOKIE[$cookie])){
-            // TODO: Delete the users remember me cookie if one has been stored.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L148
-        }*/
-        // Destroy all data registered to the session.
-
+        // Supprimer les cookies "Se souvenir de moi"
+        if (isset($_COOKIE['user_id'])) {
+            setcookie('user_id', '', time() - 3600, "/");
+        }
+        if (isset($_COOKIE['username'])) {
+            setcookie('username', '', time() - 3600, "/");
+        }
+    
+        // Détruire toutes les données de la session
         $_SESSION = array();
-
+    
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000,
@@ -150,12 +177,11 @@ class User extends \Core\Controller
                 $params["secure"], $params["httponly"]
             );
         }
-
+    
         session_destroy();
-
-        header ("Location: /");
-
-        return true;
+    
+        header("Location: /");
+        exit;
     }
-
+    
 }
