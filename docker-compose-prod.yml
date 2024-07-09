@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   app:
@@ -10,7 +10,7 @@ services:
     image: mariadb:10.4
     restart: unless-stopped
     volumes:
-      - mariadb-data:/var/lib/mysql
+      - mariadb-data-prod:/var/lib/mysql
       # Initialize database with the provided sql script.
       - ./sql/import.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
@@ -20,4 +20,4 @@ services:
       MYSQL_PASSWORD: mariadb
 
 volumes:
-  mariadb-data:
+  mariadb-data-prod:

@@ -24,5 +24,12 @@ services:
       MYSQL_USER: mariadb
       MYSQL_PASSWORD: mariadb
 
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    volumes:
+      - ./:/app
+
 volumes:
   mariadb-data:
