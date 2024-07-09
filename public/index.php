@@ -13,12 +13,6 @@ session_start();
  */
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-/**
- * Environment variables
- */
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-
 
 /**
  * Error and Exception handling
