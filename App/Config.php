@@ -14,25 +14,25 @@ class Config
      * Database host
      * @var string
      */
-    const DB_HOST = 'db';
+    const DB_HOST = getenv('DB_HOST') ?: 'db';
 
     /**
      * Database name
      * @var string
      */
-    const DB_NAME = 'mariadb';
+    const DB_NAME = getenv('DB_NAME') ?: 'mariadb';
 
     /**
      * Database user
      * @var string
      */
-    const DB_USER = 'mariadb';
+    const DB_USER = getenv('DB_USER') ?: 'mariadb';
 
     /**
      * Database password
      * @var string
      */
-    const DB_PASSWORD = 'mariadb';
+    const DB_PASSWORD = getenv('DB_PASSWORD') ?: 'mariadb';
 
     /**
      * Show or hide error messages on screen
