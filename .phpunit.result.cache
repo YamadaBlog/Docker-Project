@@ -1,0 +1,1 @@
+{"version":1,"defects":{"ApiTest::testProductsAction":5,"ApiTest::testCitiesAction":5,"FileInputTest::testFileInputIsRequired":8},"times":{"ApiTest::testProductsAction":0.258,"ApiTest::testCitiesAction":0.002,"FileInputTest::testFileInputIsRequired":0.018}}
