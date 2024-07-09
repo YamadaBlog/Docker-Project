@@ -1,10 +1,13 @@
-version: '3'
+version: "3"
+name: videgrenier-preprod
 
 services:
   app:
     build: .
     ports:
       - "8080:80"
+    volumes:
+      - upload-data-preprod:/var/www/html/public/storage
 
   db:
     image: mariadb:10.4
@@ -20,4 +23,5 @@ services:
       MYSQL_PASSWORD: mariadb
 
 volumes:
+  upload-data-preprod:
   mariadb-data-preprod:

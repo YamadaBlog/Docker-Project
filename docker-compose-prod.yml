@@ -1,10 +1,13 @@
 version: "3"
+name: videgrenier-prod
 
 services:
   app:
     image: ghcr.io/yamadablog/docker-project:master
     ports:
       - "8080:80"
+    volumes:
+      - upload-data-prod:/var/www/html/public/storage
 
   db:
     image: mariadb:10.4
@@ -20,4 +23,5 @@ services:
       MYSQL_PASSWORD: mariadb
 
 volumes:
+  upload-data-prod:
   mariadb-data-prod:
