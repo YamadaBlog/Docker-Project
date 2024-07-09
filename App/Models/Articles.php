@@ -19,6 +19,13 @@ class Articles extends Model {
      * @return string|boolean
      * @throws Exception
      */
+
+
+    public static function fetchTestDatabaseConnection() {
+        // Rajout de l'accès à la base de données pour ArticleTest //
+         return static::getDB();
+        }
+
     public static function getAll($filter) {
         $db = static::getDB();
 
