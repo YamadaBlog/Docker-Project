@@ -2,9 +2,14 @@ version: '3'
 
 services:
   app:
-    image: ghcr.io/yamadablog/docker-project:master
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - .devcontainer/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
 
   db:
     image: mariadb:10.4
