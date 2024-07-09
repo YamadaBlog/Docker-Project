@@ -5,7 +5,9 @@ body {
   color: #2e2e2e;
   font-family: "Hind Guntur", sans-serif;
   font-size: 16px;
-  background-color: #ffffff; }
+  background-color: #ffffff;
+ }
+
 
 body.light {
   background-color: #ffffff; }
@@ -1081,9 +1083,6 @@ video {
       border-bottom-color: #ea2c5a; }
       .single-v-footer-switch > a.active span, .single-v-footer-switch > a.active i::before {
         color: #ea2c5a; }
-
-.cb-content {
-  width: 130% !important; }
 
 /*
 * Content Index END
