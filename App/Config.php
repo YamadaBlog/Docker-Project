@@ -2,41 +2,19 @@
 
 namespace App;
 
-/**
- * Application configuration
- *
- * PHP version 7.0
- */
 class Config
 {
+    public static $DB_HOST;
+    public static $DB_NAME;
+    public static $DB_USER;
+    public static $DB_PASSWORD;
+    public static $SHOW_ERRORS = true;
 
-    /**
-     * Database host
-     * @var string
-     */
-    const DB_HOST = getenv('DB_HOST') ?: 'db';
-
-    /**
-     * Database name
-     * @var string
-     */
-    const DB_NAME = getenv('DB_NAME') ?: 'mariadb';
-
-    /**
-     * Database user
-     * @var string
-     */
-    const DB_USER = getenv('DB_USER') ?: 'mariadb';
-
-    /**
-     * Database password
-     * @var string
-     */
-    const DB_PASSWORD = getenv('DB_PASSWORD') ?: 'mariadb';
-
-    /**
-     * Show or hide error messages on screen
-     * @var boolean
-     */
-    const SHOW_ERRORS = true;
+    public static function init()
+    {
+        self::$DB_HOST = getenv('DB_HOST') ?: 'db';
+        self::$DB_NAME = getenv('DB_NAME') ?: 'mariadb';
+        self::$DB_USER = getenv('DB_USER') ?: 'mariadb';
+        self::$DB_PASSWORD = getenv('DB_PASSWORD') ?: 'mariadb';
+    }
 }
