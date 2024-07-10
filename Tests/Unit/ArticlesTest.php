@@ -14,9 +14,12 @@ class ArticlesTest extends TestCase
 
     public function testGetAll()
     {
-        $result = ArticlesMock::getAll('views');
-        $this->assertNotEmpty($result);
-        $this->assertEquals('Mock Article', $result[0]['name']);
+        $filter = 'views';
+        $result = ArticlesMock::getAll($filter);
+
+        $this->assertCount(2, $result);
+        $this->assertEquals(200, $result[0]['views']);
+        $this->assertEquals(100, $result[1]['views']);
     }
 
     public function testGetOne()

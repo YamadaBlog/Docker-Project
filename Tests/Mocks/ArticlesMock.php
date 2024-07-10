@@ -9,17 +9,44 @@ class ArticlesMock extends Articles
     public static function getAll($filter)
     {
         // Implémentation mock de la méthode getAll
-        return [
+        $articles = [
             [
                 'id' => 1,
-                'name' => 'Mock Article',
-                'description' => 'Mock Description',
+                'name' => 'Mock Article 1',
+                'description' => 'Mock Description 1',
                 'published_date' => '2023-01-01',
                 'user_id' => 1,
-                'views' => 0,
-                'picture' => 'mock.jpg'
+                'views' => 100,
+                'picture' => 'mock1.jpg'
+            ],
+            [
+                'id' => 2,
+                'name' => 'Mock Article 2',
+                'description' => 'Mock Description 2',
+                'published_date' => '2023-01-02',
+                'user_id' => 2,
+                'views' => 200,
+                'picture' => 'mock2.jpg'
             ]
         ];
+
+        switch ($filter){
+            case 'views':
+                usort($articles, function($a, $b) {
+                    return $b['views'] - $a['views'];
+                });
+                break;
+            case 'date':
+                usort($articles, function($a, $b) {
+                    return strcmp($b['published_date'], $a['published_date']);
+                });
+                break;
+            case '':
+                // Pas de tri
+                break;
+        }
+
+        return $articles;
     }
 
     public static function getOne($id)
