@@ -1,4 +1,4 @@
-version: '3'
+name: videgrenier-dev
 
 services:
   app:
@@ -23,6 +23,13 @@ services:
       MYSQL_DATABASE: mariadb
       MYSQL_USER: mariadb
       MYSQL_PASSWORD: mariadb
+
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    volumes:
+      - ./:/app
 
 volumes:
   mariadb-data:
